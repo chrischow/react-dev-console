@@ -134,7 +134,7 @@ function App() {
   return (
     <div className="container mt-4">
       <h1 className="text-center">React Dev Console</h1>
-      <p className="text-center mb-4">
+      <p className="subtitle text-center mb-4">
         A workaround console for debugging your code in a tool-less environment.
       </p>
       <Cell id="1" />

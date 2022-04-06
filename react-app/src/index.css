@@ -33,6 +33,7 @@ p {
 
 textarea.form-control {
   font-family: 'Lucida Sans Typewriter', 'Courier New', 'Consolas', monospace;
+  font-size: inherit!important;
   color: #D1E4FD!important;
   background-color: #1A2637!important;
   padding: 20px!important;

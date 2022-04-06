@@ -6,47 +6,57 @@ import $ from 'jquery';
 console.Log = console.log;
 
 function CellOutput(props) {
-  var outputs = '';
+  
   // Overwrite console.log
   console.log = function() {
+    var logOutputs = '';
     var args = Array.prototype.slice.call(arguments);
-    for (var i=0; i<args.length; i++) {
-      if (typeof args[i] === 'string') {
-        outputs = outputs + args[i]
+    
+    for (var idx=0; idx<args.length; idx++) {
+      if (typeof args[idx] === 'string') {
+        logOutputs = logOutputs + args[idx]
       } else {
-        outputs = outputs + JSON.stringify(args[i]);
+        logOutputs = logOutputs + JSON.stringify(args[idx]);
       }
 
-      if (i < args.length-1) {
-        outputs = outputs + ' ';
+      if (idx < args.length-1) {
+        logOutputs = logOutputs + ' ';
       }
     }
-    return outputs
+    outputs.push(<pre>{logOutputs}</pre>);
   };
+
+  var outputs = [];
 
   if (props.cell) {
     try {
       var commandOutput = eval(props.cell);
 
       if (!commandOutput) {
-        commandOutput = 'null';
+        return outputs;
       }
 
-      if (typeof commandOutput === 'string') {
-        return <div>{commandOutput}</div>;
+      if (typeof commandOutput === 'string' || typeof commandOutput === 'number') {
+        outputs.push(<pre className="return-text">{commandOutput}</pre>);
       } else {
         var allText = JSON.stringify(commandOutput, null, 2);
         var allTextNodes = allText.split('\n').map(function(textNode) {
-          return <pre>{textNode}</pre>;
+          return <pre className="return-text">{textNode}</pre>;
         });
-        return allTextNodes;
+        outputs = outputs.concat(allTextNodes);
       }
     } catch(err){
       var errorLines = err.stack.split('\n');
-      return <div className="error">{errorLines[0]}</div>;
+      outputs.push(<pre className="error">{errorLines[0]}</pre>);
     }
   }
-  return <div>Unknown error.</div>;
+
+  // Clean up
+  outputs = outputs.filter(function(output) {
+    return output !== null
+  });
+  
+  return outputs
 }
 
 function Cell(props) {

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Dev Console</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
+
+    <script type="text/javascript">
+        var txtUrl = 'https://raw.githubusercontent.com/chrischow/react-dev-console/prod-build/txt/';
+
+        function loadWords(filename, asynch) {
+            // Retrieve text
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var sTag = document.createElement('script');
+                    sTag.type = 'text/javascript';
+                    sTag.innerHTML = this.responseText;
+                    var head = document.getElementsByTagName('head')[0];
+                    head.appendChild(sTag);
+                }
+            };
+            var url = txtUrl + filename + '.txt';
+            xhr.open('GET', url, asynch);
+            xhr.send();
+        };
+
+        // Load utils
+        loadWords('jquery-3.2.1.min', false);
+        loadWords('bootstrap-4.6.0.min', true);
+        loadWords('react.production.min', false);
+        loadWords('react-dom.production.min', false);
+        loadWords('babel-6.26.0.min', false);
+    </script>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        // Save original console.log for debugging
+        console.Log = console.log;
+
+        // Cell output component: appears below code cell
+        function CellOutput(props) {
+            var outputs = '';
+
+            // Overwrite console.log
+            console.log = function() {
+                var args = Array.prototype.slice.call(arguments);
+                for (var i=0; i<args.length; i++) {
+                    if (typeof args[i] === 'string') {
+                        outputs = outputs + args[i]
+                    } else {
+                        outputs = outputs + JSON.stringify(args[i]);
+                    }
+
+                    if (i < args.length-1) {
+                        outputs = outputs + ' ';
+                    }
+                }
+                return outputs
+            };
+
+            if (props.cell) {
+                try {
+                    var commandOutput = eval(props.cell);
+
+                    if (!commandOutput) {
+                        commandOutput = 'null';
+                    }
+
+                    if (typeof commandOutput === 'string') {
+                        return <div>{commandOutput}</div>;
+                    } else {
+                        var allText = JSON.stringify(commandOutput, null, 2);
+                        var allTextNodes = allText.split('\n').map(function(textNode) {
+                        return <pre>{textNode}</pre>;
+                        });
+                        return allTextNodes;
+                    }
+                } catch(err){
+                    var errorLines = err.stack.split('\n');
+                    return <div className="error">{errorLines[0]}</div>;
+                }
+            }
+            return <div>Unknown error.</div>;
+        }
+
+        // Cell component: code + output
+        function Cell(props) {
+            // Initialise states: `form` for controlled form and `cell` for cell value
+            const [cell, setCell] = React.useState('');
+            const [form, setForm] = React.useState({
+                commands: ''
+            });
+
+            function handleChange(event) {
+                setForm(prevForm => {
+                    return {
+                        ...prevForm,
+                        [event.target.name]: event.target.value
+                    };
+                });
+            }
+
+            function runCell() {
+                setCell(form.commands)
+            }
+
+            // Set up listener - run after every render
+            React.useEffect(function() {
+                $('#cell-' + props.id).keydown(function(e) {
+                    // Prevent tab from switching
+                    if (e.keyCode === 9) {
+                        e.preventDefault();
+                    }
+
+                    // Ctrl + Enter: Run
+                    if (e.ctrlKey && (e.keyCode === 13)) {
+                        $('#cell-' + props.id + '-play').click();
+                    }
+                });
+
+                $('#cell-' + props.id).on('input', function () {
+                    this.style.height = "";
+                    this.style.height = this.scrollHeight + "px";
+                });
+            });
+
+            return (
+                <div>
+                    <div className="cell-div mb-3">
+                        <form className="form">
+                            <textarea
+                                id={'cell-' + props.id}
+                                className="form-control"
+                                name="commands"
+                                value={form.commands}
+                                onChange={handleChange}
+                                rows="3"
+                            />
+                        </form>
+                        <div className="play-button-div" id={'cell-' + props.id + '-play'} onClick={runCell}>
+                            <svg className="play-button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" role="img">
+                                <path 
+                                    fill="currentcolor"
+                                    d="M361 215C375.3 223.8 384 239.3 384 256C384 272.7 375.3 288.2 361 
+                                    296.1L73.03 472.1C58.21 482 39.66 482.4 24.52 473.9C9.377 465.4 0 
+                                    449.4 0 432V80C0 62.64 9.377 46.63 24.52 38.13C39.66 29.64 58.21 
+                                    29.99 73.03 39.04L361 215z"
+                                />
+                            </svg>
+                        </div>
+                    </div>
+                    {cell && <div className="msg">
+                    <CellOutput cell={cell} />
+                    </div>}
+                </div>
+            );
+        }
+
+        // Main app component
+        function App() {
+            return (
+                <div className="container mt-4">
+                <h1 className="text-center">React Dev Console</h1>
+                <p className="text-center mb-4">
+                    A workaround console for debugging your code in a tool-less environment.
+                </p>
+                <Cell id="1" />
+                </div>
+            );
+        }
+
+        // Render
+        ReactDOM.render( <App />, document.getElementById('root') );
+    </script>
+</body>
+</html>

@@ -2,7 +2,7 @@ body {
   background-color: #333F50!important;
   color: #ddd!important;
   font-family: 'Bahnschrift Light', 'Segoe UI Light', sans-serif !important;
-  font-size: 12px;
+  font-size: 15px;
 }
 
 h1 {
@@ -15,7 +15,7 @@ p {
 }
 
 .subtitle {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
 }
 
 .msg {

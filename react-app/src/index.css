@@ -65,7 +65,7 @@ textarea.form-control:active, textarea.form-control:focus {
 }
 
 .play-button:hover {
-  color: #0EC4B2;
+  color: #01B7A5;
   transition: 0.3s;
   cursor: pointer;
 }
@@ -91,4 +91,16 @@ pre {
 
 .return-text {
   color: #7B73F0!important;
+}
+
+.modal-content.bg-dark {
+  background-color: #172334!important;
+}
+
+.text-green {
+  color: #27DDCB;
+}
+
+.text-blue {
+  color: #7B73F0;
 }

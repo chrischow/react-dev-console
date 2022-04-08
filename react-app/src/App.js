@@ -221,15 +221,16 @@ function App() {
                     29.99 73.03 39.04L361 215z"
                   />
                 </svg>
-                to run your code. Note the following:
+                to run your code.
               </p>
+              <p>Note the following:</p>
               <ul>
                 <li>
-                  <strong>The code cell is executed in its own local context.</strong> 
+                  <strong>The code cell is executed in its own local context. </strong> 
                   It has no access to variables or functions created in prior code runs.
                 </li>
                 <li>
-                  <strong>The supported version of JavaScript depends entirely on the browser.</strong>
+                  <strong>The supported version of JavaScript depends entirely on the browser. </strong>
                   That means you can only use ES5 / ECMAScript 2009 for IE11, or ES6 / ECMAScript 2015 for
                   almost all versions of Chrome and Edge.
                 </li>

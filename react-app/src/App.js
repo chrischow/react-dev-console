@@ -124,8 +124,17 @@ function Cell(props) {
           >
           </textarea>
         </form>
-        <div className="play-button-div" id={'cell-' + props.id + '-play'} onClick={runCell}>
-          <svg className="play-button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" role="img">
+        <div 
+          className="play-button-div"
+          id={'cell-' + props.id + '-play'}
+          onClick={runCell}
+        >
+          <svg 
+            className="play-button"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 384 512"
+            role="img"
+          >
             <path 
               fill="currentcolor"
               d="M361 215C375.3 223.8 384 239.3 384 256C384 272.7 375.3 288.2 361 
@@ -173,7 +182,14 @@ function App() {
         </a>
       </p>
       <Cell id="1" />
-      <div className="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel" aria-hidden="true">
+      <div 
+        className="modal fade"
+        id="infoModal"
+        tabIndex="-1"
+        role="dialog"
+        aria-labelledby="infoModalLabel"
+        aria-hidden="true"
+      >
         <div className="modal-dialog" role="document">
           <div className="modal-content bg-dark">
             <div className="modal-header">
@@ -191,7 +207,12 @@ function App() {
                 Simply paste your code into the code cell and hit 
                 <span className="text-blue"> Ctrl + Enter</span> or click the
                 play button 
-                <svg className="ml-1 play-button mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" role="img">
+                <svg 
+                  className="ml-1 play-button mr-1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 384 512"
+                  role="img"
+                >
                   <path 
                     fill="currentcolor"
                     d="M361 215C375.3 223.8 384 239.3 384 256C384 272.7 375.3 288.2 361 
@@ -200,8 +221,20 @@ function App() {
                     29.99 73.03 39.04L361 215z"
                   />
                 </svg>
-                to run your code.
+                to run your code. Note the following:
               </p>
+              <ul>
+                <li>
+                  <strong>The code cell is executed in its own local context.</strong> 
+                  It has no access to variables or functions created in prior code runs.
+                </li>
+                <li>
+                  <strong>The supported version of JavaScript depends entirely on the browser.</strong>
+                  That means you can only use ES5 / ECMAScript 2009 for IE11, or ES6 / ECMAScript 2015 for
+                  almost all versions of Chrome and Edge.
+                </li>
+                <li>The only additional third-party library available is jQuery 3.2.1.</li>
+              </ul>
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
